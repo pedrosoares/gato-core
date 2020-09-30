@@ -32,7 +32,8 @@ impl Request {
     }
 
     pub fn json(&self) -> Value {
-        return json!(self.body);
+        let v: Value = serde_json::from_str(self.body.as_str()).unwrap();
+        return v;
     }
 
     pub fn get_param(&self, name: &str, default_value: &str) -> String {
