@@ -13,12 +13,28 @@ impl RequestBuilder {
         };
     }
 
+    pub fn add_method(&mut self, method: String) {
+        self.request.method = method;
+    }
+
+    pub fn add_uri(&mut self, uri: String) {
+        self.request.uri = uri;
+    }
+
     pub fn add_param(&mut self, name: String, value: String) {
         self.request.params.insert(name, value);
     }
 
     pub fn add_params(&mut self, params: HashMap<String, String>) {
         self.request.params = params;
+    }
+
+    pub fn add_header(&mut self, name: String, value: String) {
+        self.request.headers.insert(name, value);
+    }
+
+    pub fn add_headers(&mut self, headers: HashMap<String, String>) {
+        self.request.headers = headers;
     }
 
     pub fn add_body(&mut self, body: String) {
