@@ -52,8 +52,7 @@ pub struct Request {
     uri: String,
     headers: HashMap<String, String>,
     params: HashMap<String, String>,
-    body: String,
-    body_json: Option<Value>
+    body: String
 }
 
 impl Request {
@@ -64,8 +63,7 @@ impl Request {
             uri: String::new(),
             body: String::new(),
             headers: HashMap::new(),
-            params: HashMap::new(),
-            body_json: None
+            params: HashMap::new()
         };
     }
 
@@ -75,8 +73,7 @@ impl Request {
             uri:  self.uri.clone(),
             body:  self.body.clone(),
             headers:  self.headers.clone(),
-            params:  self.params.clone(),
-            body_json: None
+            params:  self.params.clone()
         };
     }
 
@@ -89,7 +86,7 @@ impl Request {
     }
 
     // TODO add multipart/form-data handler
-    pub fn get(&mut self, field: String) -> Value {
+    pub fn get(&self, field: String) -> Value {
         let mut json = self.json();
         let fields = field.split(".");
         for field in fields {
@@ -98,12 +95,8 @@ impl Request {
         return json;
     }
 
-    pub fn json(&mut self) -> Value {
-        if self.body_json.is_none() {
-            let v: Value = serde_json::from_str(self.body.as_str()).unwrap();
-            self.body_json = Some(v);
-        }
-        return self.body_json.as_ref().unwrap().clone();
+    pub fn json(&self) -> Value {
+        return serde_json::from_str(self.body.as_str()).unwrap();
     }
 
     pub fn get_param(&self, name: &str, default_value: &str) -> String {
