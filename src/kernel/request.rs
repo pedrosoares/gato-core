@@ -86,7 +86,7 @@ impl Request {
     }
 
     // TODO add multipart/form-data handler
-    pub fn get(&self, field: String) -> Value {
+    pub fn get(&self, field: &str) -> Value {
         let mut json = self.json();
         let fields = field.split(".");
         for field in fields {
@@ -99,11 +99,11 @@ impl Request {
         return serde_json::from_str(self.body.as_str()).unwrap();
     }
 
-    pub fn get_param(&self, name: &str, default_value: &str) -> String {
+    pub fn get_param(&self, name: &str) -> Option<String> {
         if self.params.contains_key(name) {
-            return self.params.get(&name.to_string()).unwrap().clone();
+            return Some(self.params.get(&name.to_string()).unwrap().clone());
         }
-        return default_value.to_string();
+        return None;
     }
 
     pub fn get_params(&self) -> HashMap<String, String> {
