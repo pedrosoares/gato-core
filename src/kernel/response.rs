@@ -9,24 +9,43 @@ pub struct Response {
 
 impl Response {
 
-    pub fn json(body: Value) -> Response {
-        let mut headers: HashMap<String, String> = HashMap::new();
-        headers.insert("Content-Type".to_string(), "application/json".to_string());
-        return Response { code: 200, body: body.to_string(), headers };
+    fn clone(&self) -> Self {
+        return Response{
+            code: self.code.clone(), headers: self.headers.clone(), body: self.body.clone()
+        };
     }
 
-    pub fn new(body: &str) -> Self {
-        let mut headers = HashMap::new();
-        headers.insert("Content-Type".to_string(), "text/html".to_string());
-        return Response{ code: 200, headers, body: body.to_string() };
+    pub fn new() -> Self {
+        return Response{ code: 200, headers: HashMap::new(), body: String::new() };
+    }
+
+    pub fn json(&mut self, body: Value) -> Self {
+        self.headers.insert("Content-Type".to_owned(), "application/json".to_owned());
+        self.body = body.to_string();
+        return self.clone();
+    }
+
+    pub fn raw(&mut self, body: &str) -> Self {
+        let content_type = "Content-Type".to_owned();
+        if !self.headers.contains_key(&content_type) {
+            self.headers.insert(content_type, "text/html".to_owned());
+        }
+        self.body = body.to_string();
+        return self.clone();
+    }
+
+    pub fn header(&mut self, name: &str, value: &str) -> &mut Self {
+        self.headers.insert(name.to_string(), value.to_string());
+        return self;
+    }
+
+    pub fn status(&mut self, code: i32) -> &mut Self {
+        self.code = code;
+        return self;
     }
 
     pub fn get_body(&self) -> String {
         return self.body.clone();
-    }
-
-    pub fn add_header(&mut self, name: &str, value: &str) {
-        self.headers.insert(name.to_string(), value.to_string());
     }
 
     pub fn get_headers(&self) -> HashMap<String, String> {
@@ -37,13 +56,4 @@ impl Response {
         return self.code;
     }
 
-    pub fn set_code(&mut self, code: i32) -> &mut Self {
-        self.code = code;
-        return self;
-    }
-
-    pub fn set_body(&mut self, body: &str) -> &mut Self {
-        self.body = body.to_string();
-        return self;
-    }
 }
