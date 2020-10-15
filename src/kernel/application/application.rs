@@ -1,7 +1,8 @@
 use std::env::Args;
-use crate::kernel::{HttpCore, RouterHandler, Router};
+use crate::kernel::{HttpCore, RouterHandler, Router, Logger};
 use crate::kernel::http_core::HttpCoreHandler;
 use crate::kernel::application::service_provider::ServiceProvider;
+use crate::kernel::logger::FileLogger;
 
 pub struct Application {
     args: Args,
@@ -19,6 +20,8 @@ impl Application {
     }
 
     pub fn run(&mut self) {
+        // Set Default Logger Driver
+        Logger::set_driver(Box::new(FileLogger { }));
         (self.bootstrap_handler)(&mut self.service_provider); // Load the application configuration
         self.service_provider.boot(); // Load all providers
 
