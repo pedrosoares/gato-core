@@ -16,3 +16,4 @@ pub use self::request::Request;
 pub use self::request::RequestBuilder;
 pub use self::response::Response;
 pub use self::logger::Logger;
+pub use self::logger::Log;
