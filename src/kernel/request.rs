@@ -96,7 +96,11 @@ impl Request {
     }
 
     pub fn json(&self) -> Value {
-        return serde_json::from_str(self.body.as_str()).unwrap();
+        return if self.body != "" {
+            serde_json::from_str(self.body.as_str()).unwrap()
+        } else {
+            Value::Null
+        };
     }
 
     pub fn get_param(&self, name: &str) -> Option<String> {
