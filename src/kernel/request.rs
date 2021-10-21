@@ -28,6 +28,10 @@ impl RequestBuilder {
     pub fn add_params(&mut self, params: HashMap<String, String>) {
         self.request.params = params;
     }
+    
+    pub fn add_querystring(&mut self, querystring: HashMap<String, String>) {
+        self.request.querystring = querystring;
+    }
 
     pub fn add_header(&mut self, name: String, value: String) {
         self.request.headers.insert(name, value);
@@ -52,6 +56,7 @@ pub struct Request {
     uri: String,
     headers: HashMap<String, String>,
     params: HashMap<String, String>,
+    querystring: HashMap<String, String>,
     body: String
 }
 
@@ -63,6 +68,7 @@ impl Request {
             uri: String::new(),
             body: String::new(),
             headers: HashMap::new(),
+            querystring: HashMap::new(),
             params: HashMap::new()
         };
     }
@@ -73,6 +79,7 @@ impl Request {
             uri:  self.uri.clone(),
             body:  self.body.clone(),
             headers:  self.headers.clone(),
+            querystring:  self.querystring.clone(),
             params:  self.params.clone()
         };
     }
@@ -101,6 +108,17 @@ impl Request {
         } else {
             Value::Null
         };
+    }
+
+    pub fn get_query(&self, name: &str) -> Option<String> {
+        if self.querystring.contains_key(name) {
+            return Some(self.querystring.get(&name.to_string()).unwrap().clone());
+        }
+        return None;
+    }
+    
+    pub fn get_querystring(&self) -> HashMap<String, String> {
+        return self.querystring.clone();
     }
 
     pub fn get_param(&self, name: &str) -> Option<String> {
