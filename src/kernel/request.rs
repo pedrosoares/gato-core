@@ -141,3 +141,39 @@ impl Request {
     }
 
 }
+
+#[macro_export]
+macro_rules! get_param {
+    ($mand_2:expr, $opt:expr) => {
+        ($mand_2.get_param($opt).unwrap_or("".to_owned()))
+    };
+    ($mand_2:expr, $($opt:expr),*) => {
+        ($(
+            $mand_2.get_param($opt).unwrap_or("".to_owned()),
+        )*)
+    };
+}
+
+#[macro_export]
+macro_rules! get_query {
+    ($mand_2:expr, $opt:expr) => {
+        ($mand_2.get_query($opt).unwrap_or("".to_owned()))
+    };
+    ($mand_2:expr, $($opt:expr),*) => {
+        ($(
+            $mand_2.get_query($opt).unwrap_or("".to_owned()),
+        )*)
+    };
+}
+
+#[macro_export]
+macro_rules! get_body {
+    ($mand_2:expr, $opt:expr) => {
+        ($mand_2.get($opt).as_str().unwrap_or("").to_string())
+    };
+    ($mand_2:expr, $($opt:expr),*) => {
+        ($(
+            $mand_2.get($opt).as_str().unwrap_or("").to_string(),
+        )*)
+    };
+}

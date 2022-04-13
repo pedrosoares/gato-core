@@ -22,14 +22,16 @@ impl Logger {
         }
     }
 
-    pub fn info(text: &str) -> () {
+    pub fn info(text: impl Into<String>) -> () {
+        let text = text.into();
         let driver = Logger::get_driver();
-        driver.info(text);
+        driver.info(text.as_str());
     }
 
-    pub fn error(text: &str) -> () {
+    pub fn error(text: impl Into<String>) -> () {
+        let text = text.into();
         let driver = Logger::get_driver();
-        driver.error(text);
+        driver.error(text.as_str());
     }
 
 
