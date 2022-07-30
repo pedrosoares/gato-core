@@ -20,6 +20,9 @@ impl Response {
 
     pub fn add_default_header(name: &str, value: &str) {
         unsafe {
+            if HTTP_HEADERS.is_none() {
+                HTTP_HEADERS.set_instance(HashMap::new());
+            }
             let mut headers = HTTP_HEADERS.get_instance().clone();
             headers.insert(name.to_string(), value.to_string());
             HTTP_HEADERS.set_instance(headers);
