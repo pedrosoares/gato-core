@@ -1,11 +1,14 @@
 use std::collections::HashMap;
 use serde_json::Value;
+use crate::kernel::singleton::{new_singleton, Singleton};
 
 pub struct Response {
     code: i32,
     headers: HashMap<String, String>,
     body: String
 }
+
+static mut HTTP_HEADERS : Singleton<HashMap<String, String>> = new_singleton();
 
 impl Response {
 
@@ -15,8 +18,19 @@ impl Response {
         };
     }
 
+    pub fn add_default_header(name: &str, value: &str) {
+        unsafe {
+            let mut headers = HTTP_HEADERS.get_instance().clone();
+            headers.insert(name.to_string(), value.to_string());
+            HTTP_HEADERS.set_instance(headers);
+        }
+    }
+
     pub fn new() -> Self {
-        return Response{ code: 200, headers: HashMap::new(), body: String::new() };
+        let headers = unsafe {
+            HTTP_HEADERS.get_instance().clone()
+        };
+        return Response{ code: 200, headers, body: String::new() };
     }
 
     pub fn json(&mut self, body: Value) -> Self {
